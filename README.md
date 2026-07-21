@@ -17,9 +17,7 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 *   **Frame:** 6" x 8" Oslo Black Picture Frame (Home Bargains)
 *   **Storage:** MicroSD Card [requires card reader for loading generated images]
 
-> [!WARNING]
-> **Hardware Caution**
-> The **Pimoroni Inky Frame** is a developer kit board intended for tinkerers and electronics hobbyists. It can be fragile and finicky to run compared to consumer off-the-shelf devices.
+> **Caution**: The **Pimoroni Inky Frame** is a developer kit board intended for tinkerers and electronics hobbyists. It can be fragile and finicky to run compared to consumer off-the-shelf devices.
 
 ---
 
