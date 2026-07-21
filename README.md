@@ -11,7 +11,7 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 
 ## Hardware
 
-*   **Display & Board:** Pimoroni Inky Frame 7.3" (Pimoroni) [requires Micro-USB data cable for connecting to Thonny]
+*   **Display & Board:** Inky Frame 7.3" (Pimoroni) [requires Micro-USB data cable for connecting to Thonny]
 *   **Battery:** LiPo Battery Pack 2000mAh (Pimoroni)
 *   **Charger:** LiPo Amigo - LiPo/LiIon Battery Charger (Pimoroni) [requires USB-C cable for charging]
 *   **Frame:** 6" x 8" Oslo Black Picture Frame (Home Bargains)
@@ -127,7 +127,7 @@ The system consists of two main components:
      ```bash
      python generate.py --start 2026-01-01 --end 2026-12-31
      ```
-   *(Note: Image generation has a maximum limit of 1 year per run to prevent overwhelming the Muwaqqit service).*
+   *(Note: Image generation is limited to 1 year to prevent overwhelming the Muwaqqit service).*
 5. This creates a `muwaqqit/` folder containing the optimized `YYYY-MM-DD.png` images.
 
 ### Phase 2: Prepare SD Card
