@@ -200,14 +200,16 @@ If the power is cut or the USB is disconnected while the Pico is reading/writing
 
 ---
 
+## Attribution
+
+If you use, fork, or adapt this code or design, please properly attribute and link back to the original [Ruzname repository](https://github.com/reedwan/Ruzname).
+
+---
+
 ## Credits
 
 *   **Font:** **PP Neue Bit (Bold)** designed by Steve Marchal for Pangram Pangram Foundry. Free for personal, non-commercial use. Commercial projects require a license from Pangram Pangram.
 *   **Salah Data:** Prayer times and astronomical data provided by [Muwaqqit](https://www.muwaqqit.com).
-
-## Attribution
-
-If you use, fork, or adapt this code or design, please properly attribute and link back to the original [Ruzname repository](https://github.com/reedwan/Ruzname).
 
 ---
 
