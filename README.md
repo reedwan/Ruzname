@@ -9,7 +9,7 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 
 ---
 
-## Hardware & Components
+## Hardware
 
 *   **Display & Board:** Pimoroni Inky Frame 7.3" (Pimoroni) [requires Micro-USB data cable for connecting to Thonny]
 *   **Battery:** LiPo Battery Pack 2000mAh (Pimoroni)
@@ -19,7 +19,7 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 
 ---
 
-## Directory Structure
+## Project Structure
 
 *   `generate.py`: The Python script that fetches prayer times and generates daily calendar images.
 *   `main.py`: The MicroPython code running on the Inky Frame that manages power, loads images, and sets the wakeup alarm.
@@ -28,7 +28,7 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 *   `muwaqqit/`: Directory for generated `YYYY-MM-DD.png` calendar images (includes `2026-01-01.example.png` as a reference example).
 *   `requirements.txt`: Python package requirements.
 
-## System Architecture
+## Project Architecture
 
 The system consists of two main components:
 *   **Image Generator (`generate.py`):** Runs on your computer to pre-render e-paper calendar images in bulk (`YYYY-MM-DD.png`) using the Muwaqqit API. These are then saved to an SD card.
@@ -82,13 +82,13 @@ The system consists of two main components:
 *   `WAKE_HOUR`: Daily wakeup hour in **UTC** (0–23, defaults to `9` UTC).
 *   `WAKE_MINUTE`: Daily wakeup minute (0–59, defaults to `0`).
 
-### 2. Immediate Power Latching & Status
+### 2. Board Status
 *   **VSYS Hold (GP2):** The first line of code sets `GP2` high to latch power on, keeping the board running when the wake button is released.
 *   **Status LEDs:**
     *   **Processing LED:** Pulses during activity and turns off right before power cut.
     *   **Wi-Fi LED:** Flashes once per second while attempting Wi-Fi connection.
 
-### 3. RTC Clock Sync & Power-Aware Wi-Fi
+### 3. RTC Clock Sync
 *   Loads time from the external **PCF85063A RTC** into the internal Pico W clock.
 *   **30-Day Sync Schedule:** Checks `/last_sync_epoch.txt` and connects to Wi-Fi to sync with NTP servers once every 30 days to save battery.
 *   **Manual Bypass:** Automatically syncs Wi-Fi immediately if booted manually (button press or USB power), or if the previous sync failed.
@@ -100,7 +100,7 @@ The system consists of two main components:
     *   **Line 1:** Battery voltage/state (`Full`, `Good`, `Low`, `Critical`, or `USB`), wake trigger (`Alarm`, `Button`, or `Power`), and last NTP sync date.
     *   **Line 2:** Current run timestamp and next scheduled wakeup time.
 
-### 5. Battery Monitoring & Safety
+### 5. Battery Monitoring
 *   **Battery Life:** A 2,000 mAh LiPo battery should power the device for over a year.
 *   **Under-Voltage Lockout (UVLO):** If battery voltage drops below 3.3V, it displays a "BATTERY DEAD" screen, disables future alarms, and shuts down to protect the LiPo cell.
 *   **Failsafe Alarm:** Schedules tomorrow's wake alarm inside a `finally` block to guarantee the wakeup alarm is set even if rendering crashes.
@@ -130,7 +130,7 @@ The system consists of two main components:
    *(Note: Image generation has a maximum limit of 1 year per run to prevent overwhelming the Muwaqqit service).*
 5. This creates a `muwaqqit/` folder containing the optimized `YYYY-MM-DD.png` images.
 
-### Phase 2: Prepare the SD Card
+### Phase 2: Prepare SD Card
 1. Format your MicroSD card as **FAT32** with an **MBR** partition map (required by the MicroPython driver).
 2. Create a folder named `muwaqqit` in the root of the card.
 3. Copy all generated PNG files from your computer's `muwaqqit/` folder into the `/muwaqqit/` folder on the SD card.
@@ -147,14 +147,14 @@ Download and install [Thonny IDE](https://thonny.org) on your computer.
 2. Connect your Inky Frame to your computer via USB. Hold down the **BOOTSEL** button on the board while tapping the **Reset** button (or hold **BOOTSEL** while plugging in USB).
 3. A drive named `RPI-RP2` (or `RP2350`) will appear on your computer. Drag and drop the downloaded `.uf2` file onto the drive. The Inky Frame will flash and reboot automatically.
 
-#### 3. Connect & Configure Thonny
+#### 3. Connect Thonny
 1. Open Thonny.
 2. Go to **View** in the top menu bar and check **Files** to open the file browser panel.
 3. Click the bottom-right corner of the Thonny window (or go to **Run** > **Configure interpreter...**) and select:
    * **Interpreter:** `MicroPython (Raspberry Pi Pico)`
    * **Port:** `Try to detect port automatically` (or select your board's serial port).
 
-#### 4. Upload Files & Wi-Fi Credentials
+#### 4. Upload Files
 1. In Thonny's local file browser (top-left panel), navigate to your `Ruzname` repository folder.
 2. Right-click `main.py` and select **Upload to /** to upload and overwrite the default `main.py` on the Inky Frame flash root (this ensures Ruzname runs automatically whenever the board boots).
    *(Optional: Edit `WAKE_HOUR` and `WAKE_MINUTE` at the top of `main.py` before uploading to change your daily wakeup time in UTC).*
@@ -164,7 +164,7 @@ Download and install [Thonny IDE](https://thonny.org) on your computer.
    WIFI_PASSWORD = "Your_WiFi_Password"
    ```
 
-#### 5. Reboot & Verify
+#### 5. Reboot
 1. Click in the Thonny **Shell** area at the bottom and press **Ctrl+D** (or click the red **Stop/Restart** icon) to soft-reboot the Pico W.
 2. The onboard **Processing LED** will pulse, load the image from the SD card, and display it on screen.
 
@@ -208,7 +208,7 @@ If you use, fork, or adapt this code or design, please properly attribute and li
 
 ## Credits
 
-*   **Font:** **PP Neue Bit (Bold)** designed by Steve Marchal for Pangram Pangram Foundry. Free for personal, non-commercial use. Commercial projects require a license from Pangram Pangram.
+*   **Font:** **PP Neue Bit (Bold)** published by Pangram Pangram Foundry. Free for personal, non-commercial use. Commercial projects require a license from Pangram Pangram.
 *   **Salah Data:** Prayer times and astronomical data provided by [Muwaqqit](https://www.muwaqqit.com).
 
 ---
