@@ -19,7 +19,7 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 
 ---
 
-## Project Structure
+## Directory Structure
 
 *   `generate.py`: The Python script that fetches prayer times and generates daily calendar images.
 *   `main.py`: The MicroPython code running on the Inky Frame that manages power, loads images, and sets the wakeup alarm.
