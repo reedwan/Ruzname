@@ -54,7 +54,7 @@ The system consists of two main components:
 
 ### 4. Layout
 *   **Time Offsets & Formatting:** Converts raw API times to 12-hour `H:MM` format, applies rounding offsets (e.g. +1 min).
-*   **Dual Calendar Headers:** Renders the calendar using `PPNeueBit-Bold.otf`.
+*   **Typography:** Renders the calendar using `PPNeueBit-Bold.otf`.
 *   **Banner Colors:** Header background switches color based on the day of the week:
     *   **Red:** Weekdays (Monday – Friday)
     *   **Blue:** Weekends (Saturday – Sunday)
