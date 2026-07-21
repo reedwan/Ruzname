@@ -1,7 +1,7 @@
 # Ruzname
 ### Salah Calendar for Pimoroni Inky Frame 7.3"
 
-Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. Daily prayer time images are generated using [Muwaqqit](https://www.muwaqqit.com) and loaded onto the Inky Frame. The Inky Frame wakes up daily via its real-time clock (RTC), displays the current day's PNG, schedules a wakeup alarm for tomorrow, and cuts its power to conserve battery.
+Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. Daily prayer time images are generated as PNGs using [Muwaqqit](https://www.muwaqqit.com) and loaded onto the Inky Frame. The Inky Frame wakes up daily via its real-time clock (RTC), displays the current day's PNG, schedules a wakeup alarm for tomorrow, and cuts its power to conserve battery.
 
 <p align="center">
   <img src="docs/pic1.jpeg" alt="Ruzname Calendar" width="400">
@@ -22,17 +22,17 @@ Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. 
 ## Directory Structure
 
 *   `generate.py`: The Python script that fetches prayer times and generates daily calendar images.
-*   `main.py`: The MicroPython code running on the Inky Frame that manages power, loads images, and sets alarms.
-*   `PPNeueBit-Bold.otf`: The custom font used for the calendar layout (PP Neue Bit by Pangram Pangram. The font is free for personal use).
+*   `main.py`: The MicroPython code running on the Inky Frame that manages power, loads images, and sets the wakeup alarm.
+*   `PPNeueBit-Bold.otf`: The font used for the calendar layout.
 *   `secrets.py`: Wi-Fi network credentials file (example template included).
-*   `muwaqqit/`: Directory for generated `YYYY-MM-DD.png` calendar images (includes `2026-01-01.example.png` as a reference preview).
+*   `muwaqqit/`: Directory for generated `YYYY-MM-DD.png` calendar images (includes `2026-01-01.example.png` as a reference example).
 *   `requirements.txt`: Python package requirements.
 
 ## System Architecture
 
 The system consists of two main components:
 *   **Image Generator (`generate.py`):** Runs on your computer to pre-render e-paper calendar images in bulk (`YYYY-MM-DD.png`) using the Muwaqqit API. These are then saved to an SD card.
-*   **Display Script (`main.py`):** Runs on the Inky Frame using MicroPython to wake up daily via RTC, render the day's image from the SD card, schedule tomorrow's wakeup alarm, and cut power completely.
+*   **Display Script (`main.py`):** Runs on the Inky Frame using MicroPython to wake up daily via RTC, render the day's image from the SD card, schedule tomorrow's wakeup alarm, and cut power.
 
 ---
 
@@ -50,27 +50,23 @@ The system consists of two main components:
 *   `--end`: End date in `YYYY-MM-DD` format (defaults to `--start` date if omitted).
 
 ### 3. Data Fetching (`fetch_data`)
-*   Queries the **Muwaqqit API** (`https://www.muwaqqit.com/api2.json`) for prayer times.
+*   Queries the **Muwaqqit API** for prayer times.
 
-### 4. Layout & Typography
+### 4. Layout
 *   **Time Offsets & Formatting:** Converts raw API times to 12-hour `H:MM` format, applies rounding offsets (e.g. +1 min).
-*   **Dual Calendar Headers:** Renders the weekday name, Gregorian date, and Hijri date using `PPNeueBit-Bold.otf` at 56px for main headers and 28px for table rows.
-*   **Dynamic Banner Colors:** Header background automatically switches color based on the day of the week:
+*   **Dual Calendar Headers:** Renders the calendar using `PPNeueBit-Bold.otf`.
+*   **Banner Colors:** Header background switches color based on the day of the week:
     *   **Red:** Weekdays (Monday – Friday)
     *   **Blue:** Weekends (Saturday – Sunday)
 *   **1-Bit Mask Rendering:** To prevent blurriness and antialiasing on e-paper, text is drawn onto 1-bit monochrome masks before pasting into the color canvas.
 *   **Visual Indicators:**
-    *   **Red Bullets (`•`):** Highlights primary prayer rows (Fajr, Sunrise, Zuhr, Asr Thani, Maghrib, Isha Awwal).
-    *   **Red Triangles (`▲`):** Marks prayer times that roll over midnight into the next Gregorian day.
-
-### 5. Orientation & Color Quantization
-*   **Landscape Rotation:** Rotates the 480×800 canvas by -90° (`ROTATE_270`) for the 800×480 display.
-*   **Two-Stage Quantization:**
-    1. Quantizes first to a clean 4-color palette (Black, White, Red, Blue) with no dithering (`dither=NONE`) to lock crisp edges.
-    2. Quantizes to the final 7-color Inky Frame palette.
+    *   **Red Bullets:** Highlights primary prayer rows (Fajr, Sunrise, Zuhr, Asr Thani, Maghrib, Isha Awwal).
+    *   **Red Triangles:** Marks prayer times that roll over midnight into the next Gregorian day.
+*   **Rotation:** Rotates the 480×800 canvas by -90° (`ROTATE_270`).
+*   **Quantization:** Quantizes to the final 7-color Inky Frame palette.
 *   **Output:** Saves generated images to `muwaqqit/YYYY-MM-DD.png`.
 
-### 6. Example PNG Output
+### 5. Example PNG Output
 
 <p align="center">
   <img src="muwaqqit/2026-01-01.example.png" alt="Example PNG output image" width="600"><br>
@@ -86,7 +82,7 @@ The system consists of two main components:
 *   `WAKE_HOUR`: Daily wakeup hour in **UTC** (0–23, defaults to `9` UTC).
 *   `WAKE_MINUTE`: Daily wakeup minute (0–59, defaults to `0`).
 
-### 2. Immediate Power Latching & Status LEDs
+### 2. Immediate Power Latching & Status
 *   **VSYS Hold (GP2):** The first line of code sets `GP2` high to latch power on, keeping the board running when the wake button is released.
 *   **Status LEDs:**
     *   **Processing LED:** Pulses during activity and turns off right before power cut.
@@ -94,21 +90,21 @@ The system consists of two main components:
 
 ### 3. RTC Clock Sync & Power-Aware Wi-Fi
 *   Loads time from the external **PCF85063A RTC** into the internal Pico W clock.
-*   **30-Day Sync Schedule:** Checks `/last_sync_epoch.txt` and connects to Wi-Fi to sync with NTP servers only once every 30 days to save battery.
+*   **30-Day Sync Schedule:** Checks `/last_sync_epoch.txt` and connects to Wi-Fi to sync with NTP servers once every 30 days to save battery.
 *   **Manual Bypass:** Automatically syncs Wi-Fi immediately if booted manually (button press or USB power), or if the previous sync failed.
-*   **Immediate Radio Shutdown:** Powers down the Wi-Fi chip (`CYW43`) immediately after clock sync to prevent background interrupts from interfering with SD card reading.
+*   **Radio Shutdown:** Powers down the Wi-Fi chip (`CYW43`) immediately after clock sync to prevent background interrupts from interfering with SD card reading.
 
 ### 4. Image Decoding & Diagnostics
 *   Mounts the MicroSD card at `/sd` and decodes `/sd/muwaqqit/YYYY-MM-DD.png` directly to the display using hardware `pngdec.PNG`.
-*   Overlays a 2-line diagnostic bar along the side margin:
+*   Overlays a 2-line diagnostic bar along the bottom margin:
     *   **Line 1:** Battery voltage/state (`Full`, `Good`, `Low`, `Critical`, or `USB`), wake trigger (`Alarm`, `Button`, or `Power`), and last NTP sync date.
     *   **Line 2:** Current run timestamp and next scheduled wakeup time.
 
 ### 5. Battery Monitoring & Safety
 *   **Battery Life:** A 2,000 mAh LiPo battery should power the device for over a year.
 *   **Under-Voltage Lockout (UVLO):** If battery voltage drops below 3.3V, it displays a "BATTERY DEAD" screen, disables future alarms, and shuts down to protect the LiPo cell.
-*   **Failsafe Alarm:** Schedules tomorrow's wake alarm inside a `finally` block to guarantee the alarm is set even if rendering crashes.
-*   **Power Cut:** Disables busy LED and pulls `GP2` (VSYS Hold) low, completely turning off the device.
+*   **Failsafe Alarm:** Schedules tomorrow's wake alarm inside a `finally` block to guarantee the wakeup alarm is set even if rendering crashes.
+*   **Power Cut:** Disables busy LED and pulls `GP2` (VSYS Hold) low, turning off the device.
 
 ---
 
@@ -174,7 +170,7 @@ Download and install [Thonny IDE](https://thonny.org) on your computer.
 
 ---
 
-## Completed Build
+## Completed Build Example
 
 <p align="center">
   <img src="docs/pic2.jpeg" alt="Completed Ruzname Calendar Front" width="400">
