@@ -4,7 +4,7 @@
 Ruzname is an e-paper salah calendar powered by a **Pimoroni Inky Frame 7.3"**. Daily prayer time images are generated as PNGs using [Muwaqqit](https://www.muwaqqit.com) and loaded onto the Inky Frame. The Inky Frame wakes up daily via its real-time clock (RTC), displays the current day's PNG, schedules a wakeup alarm for tomorrow, and cuts its power to conserve battery.
 
 <p align="center">
-  <img src="docs/pic1.jpeg" alt="Ruzname Calendar" width="400">
+  <img src="docs/pic1.jpeg" alt="Ruzname Calendar" width="600">
 </p>
 
 ---
@@ -88,7 +88,7 @@ The system consists of two main components:
 *   **VSYS Hold (GP2):** The first line of code sets `GP2` high to latch power on, keeping the board running when the wake button is released.
 *   **Status LEDs:**
     *   **Processing LED:** Pulses during activity and turns off right before power cut.
-    *   **Wi-Fi LED:** Flashes once per second while attempting Wi-Fi connection.
+    *   **Wi-Fi LED:** Flashes while attempting Wi-Fi connection.
 
 ### 3. RTC Clock Sync
 *   Loads time from the external **PCF85063A RTC** into the internal Pico W clock.
@@ -96,7 +96,7 @@ The system consists of two main components:
 *   **Manual Bypass:** Automatically syncs Wi-Fi immediately if booted manually (button press or USB power), or if the previous sync failed.
 *   **Radio Shutdown:** Powers down the Wi-Fi chip (`CYW43`) immediately after clock sync to prevent background interrupts from interfering with SD card reading.
 
-### 4. Image Decoding & Diagnostics
+### 4. Image Display
 *   Mounts the MicroSD card at `/sd` and decodes `/sd/muwaqqit/YYYY-MM-DD.png` directly to the display using hardware `pngdec.PNG`.
 *   Overlays a 2-line diagnostic bar along the bottom margin:
     *   **Line 1:** Battery voltage/state (`Full`, `Good`, `Low`, `Critical`, or `USB`), wake trigger (`Alarm`, `Button`, or `Power`), and last NTP sync date.
