@@ -110,9 +110,10 @@ def label_with_angle(base, angle, prefix=" "):
             return f"{base}{prefix}{formatted}°"
     return base
 
-def fetch_data(date_str):
+def fetch_data(date_str, muwaqqit_url=None):
     """Fetch prayer times from the Muwaqqit API for a given date."""
-    parsed = urllib.parse.urlparse(MUWAQQIT_URL.strip())
+    base_url = muwaqqit_url or MUWAQQIT_URL
+    parsed = urllib.parse.urlparse(base_url.strip())
     path = parsed.path
     if not path or path == "/" or path.endswith("/index") or path.endswith("/index.html"):
         path = "/api2.json"
@@ -142,6 +143,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate daily prayer times images for Inky Frame.")
     parser.add_argument("--start", type=str, help="Start date (YYYY-MM-DD). Defaults to today.")
     parser.add_argument("--end", type=str, help="End date (YYYY-MM-DD). Defaults to start date.")
+    parser.add_argument("--url", type=str, help="Custom Muwaqqit URL (from muwaqqit.com). Defaults to MUWAQQIT_URL constant.")
     args = parser.parse_args()
     
     # Determine date range
@@ -193,7 +195,7 @@ def main():
         date_str = current_date.strftime('%Y-%m-%d')
         
         # 1. Fetch API Data
-        data = fetch_data(date_str)
+        data = fetch_data(date_str, args.url)
         if not data:
             print(f"Skipping {date_str} due to fetch error.")
             current_date += delta

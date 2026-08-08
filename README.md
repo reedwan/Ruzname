@@ -124,10 +124,10 @@ The system consists of two main components:
    * Enter your location, timezone, calculation method, and preferred astronomical angles.
    * Click **Calculate**.
    * Scroll to the bottom of the page and copy the **Bookmarkable link** (e.g. `https://www.muwaqqit.com/index?add=...`).
-3. Open `generate.py` and paste your URL into the `MUWAQQIT_URL` constant near the top of the file. *(The script automatically converts web `index` links into API endpoints).*
+3. Paste your URL into the `MUWAQQIT_URL` constant near the top of `generate.py`, or pass it directly via the `--url` argument. *(The script automatically converts web `index` links into API endpoints).*
 4. Run the generator to create daily images (e.g., for a full year):
      ```bash
-     python generate.py --start 2026-01-01 --end 2026-12-31
+     python generate.py --start 2026-01-01 --end 2026-12-31 --url "https://www.muwaqqit.com/index?..."
      ```
    *(Note: Image generation is limited to 1 year to prevent overwhelming the Muwaqqit service).*
 5. This creates a `muwaqqit/` folder containing the optimized `YYYY-MM-DD.png` images.

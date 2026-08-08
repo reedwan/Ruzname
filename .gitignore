@@ -19,3 +19,6 @@ venv.bak/
 .Spotlight-V100
 .Trashes
 
+# Muwaqqit generated calendar images
+muwaqqit/*
+!muwaqqit/*.example.png
